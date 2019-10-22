@@ -157,6 +157,16 @@ class Knr_Player {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		
+		/**
+		 * register our knr_player_settings_init to the admin_init action hook
+		 */
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'knr_player_settings_init' );
+		/**
+		 * register our knr_player_options_pages to the admin_menu action hook
+		 */
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'knr_player_options_pages' );
+
 	}
 
 	/**
@@ -172,7 +182,6 @@ class Knr_Player {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
 	}
 
 	/**
