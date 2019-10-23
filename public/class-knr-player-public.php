@@ -51,6 +51,7 @@ class Knr_Player_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		add_shortcode( 'KNR_Player', [$this,'KNR_Player_func'] );
 
 	}
 
@@ -99,5 +100,25 @@ class Knr_Player_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/knr-player-public.js', array( 'jquery' ), $this->version, false );
 
 	}
+
+	//krn shortcode
+public function KNR_Player_func( $atts ) {
+	$atts = shortcode_atts( array(
+		'id' => 0
+	), $atts );
+
+global $wpdb;
+$table_name = $wpdb->prefix . "knr_player";
+$id = $atts['id'];
+
+
+				$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$id'");
+				foreach($result as $print) {
+
+return "Name = ".$print->name;
+
+				}
+	
+}
 
 }

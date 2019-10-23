@@ -24,19 +24,31 @@ class Knr_Player_Activator {
 
 function crudOperationsTable() {
 	global $wpdb;
-	$charset_collate = $wpdb->get_charset_collate();
-	$table_name = $wpdb->prefix . "userstabletest";
-	$sql = "CREATE TABLE `$table_name` (
-	`user_id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(220) DEFAULT NULL,
-	`email` varchar(220) DEFAULT NULL,
-	PRIMARY KEY(user_id)
-	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-	";
+	$table_name = $wpdb->prefix . "knr_player";
+	
+	$charset = '';
+	if ( !empty($wpdb -> charset) )
+		$charset = "DEFAULT CHARACTER SET $wpdb->charset";
+	if ( !empty($wpdb -> collate) )
+		$charset .= " COLLATE $wpdb->collate";
+
+	$sql = "CREATE TABLE $table_name (
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	name tinytext DEFAULT '' NOT NULL,
+	data MEDIUMTEXT DEFAULT '' NOT NULL,
+	time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+	authorid tinytext NOT NULL,
+	PRIMARY KEY  (id)
+	) $charset;";
+
 	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
 		require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 		dbDelta($sql);
 	}
+
+
+
+
 }
 
 	/**
