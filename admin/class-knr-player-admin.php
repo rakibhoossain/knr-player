@@ -102,6 +102,32 @@ class Knr_Player_Admin {
 	}
 
 
+
+
+function ttt_wpmdr_add_action_plugin( $actions, $plugin_file ) 
+{
+	static $plugin;
+
+	if (!isset($plugin))
+		$plugin = plugin_basename(__FILE__);
+	if ($plugin == $plugin_file) {
+
+			$settings = array('settings' => '<a href="options-general.php#redirecthere">' . __('Settings', 'General') . '</a>');
+			$site_link = array('support' => '<a href="http://thetechterminus.com" target="_blank">Support</a>');
+		
+    			$actions = array_merge($settings, $actions);
+				$actions = array_merge($site_link, $actions);
+			
+		}
+		
+		return $actions;
+}
+
+
+
+
+
+
 /**
  * custom option and settings
  */
@@ -304,6 +330,8 @@ function knrAudioAdd() {
 	$update = false;
 
 	$knr_player_name = $knr_player_mp3 = $knr_player_is_live = $knr_player_image = $knr_player_title = $knr_player_info = $knr_h_id = $knr_player_skin= null;
+	$knr_player_default_volume = 50;
+
 	if(isset($_GET["knr_upt"])) {
 		$upt_id = $_GET["knr_upt"];
 		$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$upt_id'");
@@ -316,6 +344,7 @@ function knrAudioAdd() {
 			$knr_player_title = $data->title;
 			$knr_player_info = $data->info;
 			$knr_player_skin = $data->skin;
+			$knr_player_default_volume = $data->volume;
 
 			$knr_h_id = $upt_id;
 			$update = true;
@@ -335,13 +364,15 @@ function knrAudioAdd() {
 		$title = isset($_POST["knr_player_title"])? $_POST["knr_player_title"] : '';
 		$info = isset($_POST["knr_player_info"])? $_POST["knr_player_info"] : '';
 		$skin = isset($_POST["knr_player_skin"])? $_POST["knr_player_skin"] : 1;
+		$volume = isset($_POST["knr_player_default_volume"])? $_POST["knr_player_default_volume"] : $knr_player_default_volume;
 		$option = [
 			'src' => $url,
 			'is_live' => $is_live,
 			'image' => $image,
 			'title' => $title,
 			'info' => $info,
-			'skin'=> $skin
+			'skin'=> $skin,
+			'volume' => $volume 
 		];
 		$data = json_encode($option);
 
@@ -376,6 +407,7 @@ function knrAudioAdd() {
 		$title = $_POST["knr_player_title"];
 		$info = $_POST["knr_player_info"];
 		$skin = $_POST["knr_player_skin"];
+		$volume = $_POST["knr_player_default_volume"];
 
 		$option = [
 			'src' => $url,
@@ -383,7 +415,8 @@ function knrAudioAdd() {
 			'image' => $image,
 			'title' => $title,
 			'info' => $info,
-			'skin'=> $skin
+			'skin'=> $skin,
+			'volume' => $volume 
 		];
 		$data = json_encode($option);
 
@@ -472,6 +505,12 @@ function knrAudioAdd() {
 			  					<textarea name="knr_player_info" id="knr_player_info" class="large-text" rows="2"><?php echo $knr_player_info; ?></textarea>
 			  				</td>
 			  			</tr>
+			  			<tr>
+			  				<th>Default volume</th>
+			  				<td>
+			  					<input name="knr_player_default_volume" type="range" id="knr_player_default_volume" min="0" max="100" value="<?php echo $knr_player_default_volume; ?>" class="large-text">
+			  				</td>
+			  			</tr>
 			  		</tbody>
 			  	</table>
 			  </div>
@@ -479,12 +518,12 @@ function knrAudioAdd() {
 			  <div id="knr_player-add-skin">
 				<label>
 				  <input type="radio" name="knr_player_skin" value="1" <?php echo ($knr_player_skin == '1')? 'checked' : '';?> class="knr_checkbox">
-				  <img src="http://placehold.it/40x60/0bf/fff&text=A">
+				  <img src="<?php echo plugin_dir_url( __FILE__ ); ?>images/skin-1.jpg">
 				</label>
 
 				<label>
 				  <input type="radio" name="knr_player_skin" value="2" <?php echo ($knr_player_skin == '2')? 'checked' : '';?> class="knr_checkbox">
-				  <img src="http://placehold.it/40x60/b0f/fff&text=B">
+				  <img src="<?php echo plugin_dir_url( __FILE__ ); ?>images/skin-2.jpg">
 				</label>
 
 			  </div>

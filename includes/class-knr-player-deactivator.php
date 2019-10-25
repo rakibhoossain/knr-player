@@ -30,8 +30,12 @@ class Knr_Player_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
+		global $wpdb;
 		$table_name = $wpdb->prefix . "knr_player";
 		$wpdb->query("DROP TABLE IF EXISTS $table_name");
+
+		
+		delete_option("knr_player_options");
 	}
 
 }

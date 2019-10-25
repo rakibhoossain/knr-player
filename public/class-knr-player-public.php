@@ -71,8 +71,8 @@ class Knr_Player_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/knr-player-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name.'-animate', 'https://raw.github.com/daneden/animate.css/master/animate.css', array(), $this->version, 'all' );
 
 	}
 
@@ -95,7 +95,7 @@ class Knr_Player_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/knr-player-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/knr-player-public.js', array( 'jquery','jquery-ui-core', 'jquery-ui-slider' ), $this->version, false );
 
 	}
 }

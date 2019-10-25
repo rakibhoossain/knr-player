@@ -169,6 +169,11 @@ class Knr_Player {
 		 */
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'knr_player_options_pages' );
 
+
+		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'ttt_wpmdr_add_action_plugin', 10, 5 );
+
+
+
 	}
 
 	/**
@@ -208,22 +213,53 @@ class Knr_Player {
 			foreach($results as $result) { 
 				$data = json_decode($result->data);
 
-				$player = '
-					<div class="knr_player knr_auto knr_box">
+				if($data->skin == '2'){
+				return '
+					<div class="knr_player_2 knr" style="background-color:#e2e3ea;">
+						<div class="knr_player_rect">
+							<img src="http://localhost/wordpress/wp-content/uploads/2019/07/logo-final_23_07_2019.png" class="knr_player_icon">
+							<div class="knr_player_box">
+								<div class="info">
+									<strong>'.$data->title.'</strong>
+									<p>'.$data->info.'</p>
+								</div>
+								<div class="knr_control">
+									<div class="knr_play_control">
+										<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">
+										<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
+									</div>
+									<div class="knr_volume_control" volume="50">
+										<div class="knr_volume animated slideInLeft"></div>
+										<img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
+										<img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
+									</div>
+									<audio preload="auto" autoplay>
+										<source src="'.esc_url($data->src).'" type="audio/mpeg">
+									</audio>
+								</div>
+							</div>
+						</div>
+					</div>
+				';
+				}
+
+				return '
+					<div class="knr_player knr knr_auto knr_box" style="background-color:#e2e3ea;">
 						<div class="knr_play_button" style="background-image: url('.plugin_dir_url( __FILE__ ) .'images/player-bg.png);">
 						    <div class="player-bg knr_play">
 						    	<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">
 						    	<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
 						    </div>
 						</div>
-						<audio class="knr_audio__play" src="'.esc_url($data->src).'" preload="auto"></audio>
-					    <div class="knr-volume-controls text-center">
+						<audio preload="auto">
+							<source src="'.esc_url($data->src).'" type="audio/mpeg">
+						</audio>
+					    <div class="knr-volume-controls">
 					        <img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
 					        <img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 					    </div>
 					</div>
 				';
-				return $player;
 			}	
 		}else{
 			return __('Please specify a valid audio id', 'knr-player');
