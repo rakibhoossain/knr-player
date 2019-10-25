@@ -79,6 +79,8 @@ class Knr_Player {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
+		add_shortcode( 'KNR_Player', [$this,'KNR_Player_shortcode_handler'] );
+
 	}
 
 	/**
@@ -182,6 +184,51 @@ class Knr_Player {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+	}
+
+
+	/**
+	 * Register all of shortcode
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function KNR_Player_shortcode_handler($atts) {
+
+		if ( !isset($atts['id']) ) return __('Please specify a audio id', 'knr-player');
+		
+		global $wpdb;
+		$table_name = $wpdb->prefix . "knr_player";
+		$id = $atts['id'];
+
+		$results = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$id'");
+
+		if ($results) {
+			foreach($results as $result) { 
+				$data = json_decode($result->data);
+
+				$player = '
+					<div class="knr_player knr_auto knr_box">
+						<div class="knr_play_button" style="background-image: url('.plugin_dir_url( __FILE__ ) .'images/player-bg.png);">
+						    <div class="player-bg knr_play">
+						    	<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">
+						    	<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
+						    </div>
+						</div>
+						<audio class="knr_audio__play" src="'.esc_url($data->src).'" preload="auto"></audio>
+					    <div class="knr-volume-controls text-center">
+					        <img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
+					        <img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
+					    </div>
+					</div>
+				';
+				return $player;
+			}	
+		}else{
+			return __('Please specify a valid audio id', 'knr-player');
+		}
+
 	}
 
 	/**

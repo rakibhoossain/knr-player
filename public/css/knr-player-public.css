@@ -1,4 +1,195 @@
-/**
- * All of the CSS for your public-facing functionality should be
- * included in this file.
- */
+
+
+
+
+
+
+
+/*.knr-controls {
+    height: 96px;
+    background-image: url(../images/player-bg.png);
+    padding: 19px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}*/
+
+
+
+/*#play .fa {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.9rem;
+    color: #b1b156;
+    cursor: pointer;
+}
+
+.knr-volume-controls .fa{
+    font-size: 1.4rem;
+    color: #b1b156;
+    cursor: pointer;
+}*/
+
+
+/*Radio Box Layout*/
+/*.radio-box {
+    position: relative;
+    margin: auto;
+    max-width: 300px;
+}  
+
+#player_big {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    position: relative;
+    overflow: hidden;
+}    */
+    
+    
+/*.radio #butterfly-left {
+    background: url(../images/btrfly_left.png);
+    -webkit-transform-origin : -100% 50%;
+    -moz-transform-origin : -100% 50%;
+    -o-transform-origin : -100% 50%;
+    -ms-transform-origin : -100% 50%;
+    transform-origin : 100% 50%;
+
+    left: 50%;
+}
+
+.radio #butterfly-right {
+    background: url(../images/btrfly_right.png);
+    -webkit-transform-origin : -100% 50%;
+    -moz-transform-origin : -100% 50%;
+    -o-transform-origin : -100% 50%;
+    -ms-transform-origin : -100% 50%;
+    transform-origin : -100% 50%;
+
+    right: 50%;
+}
+
+.radio #butterfly-right,
+.radio #butterfly-left{
+    background-repeat:no-repeat;
+    width:190px;
+    height:190px;
+    z-index:5;
+    position:absolute;
+    background-size: contain; 
+    top: 30%;
+    transform: translate(-30%,-30%);
+    -webkit-animation: leaves 6s  infinite;
+    animation: leaves 6s  infinite ;
+
+}
+
+
+@-webkit-keyframes leaves {
+    0% {
+        -webkit-transform: scale(0.5);
+        opacity: 0;
+    }
+   
+    50%{
+         opacity: 1;
+    }
+    
+    100%{
+       -webkit-transform: scale(2);
+         opacity: 0;
+    }
+}
+    
+       
+@media only screen and (max-width: 1230px)  {
+@-webkit-keyframes leaves {
+    0% {
+        -webkit-transform: scale(0.5);
+        opacity: 0;
+    }
+   
+    50%{
+         opacity: 1;
+    }
+    
+    100%{
+       -webkit-transform: scale(1.5);
+         opacity: 0;
+    }
+}
+    
+}
+    
+    
+@media only screen and (max-width: 767px)  {
+@-webkit-keyframes leaves {
+    0% {
+        -webkit-transform: scale(0.5);
+        opacity: 0;
+    }
+   
+    50%{
+         opacity: 1;
+    }
+    
+    100%{
+       -webkit-transform: scale(1.5);
+         opacity: 0;
+    }
+}*/
+
+
+
+
+.knr_box {
+    max-width: 103px;
+}
+.knr_auto {
+    margin: auto;
+}
+.knr_play_button {
+    height: 96px;
+/*    background-image: url(../images/player-bg.png);*/
+    padding: 19px;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+.player-bg {
+    height: 65px;
+    width: 65px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    text-align: center;
+    position: relative;
+    -webkit-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+}
+.text-center{
+    text-align: center;
+}
+.knr_play.player-animate > .play-icon{
+    display:none;
+}
+.knr_play:not(.player-animate) > .pause-icon{
+    display: none;
+}
+
+.knr-volume-controls.mute .speaker-icon{
+    display:none;
+}
+.knr-volume-controls:not(.mute) .mute-icon{
+    display: none;
+}
+
+.the_content img.speaker-icon,
+img.speaker-icon,img.mute-icon,
+.the_content img.mute-icon {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}

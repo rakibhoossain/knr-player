@@ -29,4 +29,57 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+
+jQuery(document).ready(function($){
+ // ========================================================
+  // KNR Player
+  // ========================================================
+  
+function audioSetup(player) {
+const play    = $(player).find('.knr_play'),
+      song    = $(player).find('audio')[0],
+      volume  =  $(player).find('.knr-volume-controls');
+      let mute      =   false;
+
+  play.click(function(){
+    if (!song.paused) {
+      song.pause();
+      play.removeClass('player-animate');
+    } else {
+      song.play();
+    }
+  });
+  song.onplaying = function(){
+    $(play).addClass('player-animate');
+  };
+
+  song.addEventListener('ended', function () {
+    song.currentTime = 0;
+    play.removeClass('player-animate');
+  });
+
+  volume.click(function(){
+      if (mute) {
+      $(volume).removeClass('mute');
+    } else {
+      $(volume).addClass('mute');
+    }
+    song.muted = !mute;
+    mute = !mute;
+  });
+
+}
+
+
+const players = $(".knr_player");
+if(players.length>0){ 
+  for (let i = 0; i < players.length; i++) {
+    audioSetup(players[i]);
+  }
+}
+
+
+});
+
+
 })( jQuery );
