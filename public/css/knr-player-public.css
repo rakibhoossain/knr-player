@@ -208,6 +208,10 @@ img.speaker-icon,img.mute-icon,
 }
 
 /*Skin-2*/
+.knr_player_2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 .knr_player_2 .knr_volume_control.mute .speaker-icon,
 .knr_player_2 .knr_play_control.player-animate>.play-icon,
 .knr_player_2 .knr_volume_control:not(.mute) .mute-icon,
@@ -226,13 +230,13 @@ img.speaker-icon,img.mute-icon,
     max-height: 250px;
     align-items: center;
     padding: 5px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .knr_player_2 .knr_player_icon{
     width: 150px;
     height: 150px;
-    padding: 20px;
+    padding: 10px;
 }
 .knr_player_2 .knr_control {
     display: inline-flex;

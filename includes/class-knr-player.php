@@ -170,7 +170,9 @@ class Knr_Player {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'knr_player_options_pages' );
 
 
-		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'ttt_wpmdr_add_action_plugin', 10, 5 );
+		// Add Settings link to the plugin
+		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php');
+		$this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links');
 
 
 
