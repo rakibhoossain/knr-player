@@ -313,7 +313,7 @@ function knr_player_settings() {
 
 
 		if(isset($_GET["knr_upt"])) {
-			$upt_id = $_GET["knr_upt"];
+			$upt_id = sanitize_text_field($_GET["knr_upt"]);
 			$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$upt_id'");
 			foreach($result as $print) {
 				$data = json_decode($print->data);
@@ -336,15 +336,15 @@ function knr_player_settings() {
 
 			$time = current_time('mysql');
 			$authorid = $user_ID;
-			$name = $_POST["knr_player_name"];
+			$name = sanitize_text_field($_POST["knr_player_name"]);
 
 			$url = isset($_POST["knr_player_mp3"])? esc_url($_POST["knr_player_mp3"]) : '';
 			$is_live = ($_POST["knr_player_is_live"])? true : false;
 			$image = isset($_POST["knr_player_image"])? esc_url($_POST["knr_player_image"]) : '';
-			$title = isset($_POST["knr_player_title"])? $_POST["knr_player_title"] : '';
-			$info = isset($_POST["knr_player_info"])? $_POST["knr_player_info"] : '';
-			$skin = isset($_POST["knr_player_skin"])? $_POST["knr_player_skin"] : 1;
-			$volume = isset($_POST["knr_player_default_volume"])? $_POST["knr_player_default_volume"] : $knr_player_default_volume;
+			$title = isset($_POST["knr_player_title"])? sanitize_text_field($_POST["knr_player_title"]) : '';
+			$info = isset($_POST["knr_player_info"])? sanitize_textarea_field($_POST["knr_player_info"]) : '';
+			$skin = isset($_POST["knr_player_skin"])? sanitize_text_field($_POST["knr_player_skin"]) : 1;
+			$volume = isset($_POST["knr_player_default_volume"])? sanitize_text_field($_POST["knr_player_default_volume"]) : $knr_player_default_volume;
 			$option = [
 				'src' => $url,
 				'is_live' => $is_live,
@@ -378,16 +378,16 @@ function knr_player_settings() {
 
 			$time = current_time('mysql');
 			$authorid = $user_ID;
-			$name = $_POST["knr_player_name"];
-			$id = $_POST["knr_audio_id"]; 
+			$name = sanitize_text_field($_POST["knr_player_name"]);
+			$id = sanitize_text_field($_POST["knr_audio_id"]); 
 
 			$url = esc_url($_POST["knr_player_mp3"]);
 			$is_live = ($_POST["knr_player_is_live"])? true : false;
 			$image = esc_url($_POST["knr_player_image"]);
-			$title = $_POST["knr_player_title"];
-			$info = $_POST["knr_player_info"];
-			$skin = $_POST["knr_player_skin"];
-			$volume = $_POST["knr_player_default_volume"];
+			$title = sanitize_text_field($_POST["knr_player_title"]);
+			$info = sanitize_textarea_field($_POST["knr_player_info"]);
+			$skin = sanitize_text_field($_POST["knr_player_skin"]);
+			$volume = sanitize_text_field($_POST["knr_player_default_volume"]);
 
 			$option = [
 				'src' => $url,
@@ -420,7 +420,7 @@ function knr_player_settings() {
 			echo "<script>location.replace('admin.php?page=knr_player');</script>";
 		}
 		if(isset($_GET["knr_del"])) {
-			$del_id = $_GET["knr_del"];
+			$del_id = sanitize_text_field($_GET["knr_del"]);
 			$wpdb->query("DELETE FROM $table_name WHERE id='$del_id'");
 			echo "<script>location.replace('admin.php?page=knr_player');</script>";
 		}
@@ -441,14 +441,14 @@ function knr_player_settings() {
 				</div>
 				<div id="knr_player-tabs">
 				  <ul id="knr_player-nav">
-				    <li><a href="#knr_player-add-audio"><?php echo ($update)? 'Audio' : 'Add audio'; ?></a></li>
-				    <li class="mr-30"><a href="#knr_player-add-skin">Skin</a></li>
+				    <li><a href="#knr_player-add-audio"><?php echo ($update)? __('Audio', 'knr-player') : __('Add audio', 'knr-player'); ?></a></li>
+				    <li class="mr-30"><a href="#knr_player-add-skin"><?php _e('Skin', 'knr-player');?></a></li>
 					<?php
 					if ($update) {
-						echo '<li><button name="knr_player_update" type="submit" class="knr_button knr_primary">Update</button></li>';
-						echo '<li><button name="knr_player_cancel" type="submit" class="knr_button knr_info">Cancel</button></li>';
+						echo '<li><button name="knr_player_update" type="submit" class="knr_button knr_primary">'.__('Update', 'knr-player').'</button></li>';
+						echo '<li><button name="knr_player_cancel" type="submit" class="knr_button knr_info">'.__('Cancel', 'knr-player').'</button></li>';
 					}else{
-						echo '<li><button name="knr_player_save" type="submit" class="knr_button knr_primary">Save</button></li>';
+						echo '<li><button name="knr_player_save" type="submit" class="knr_button knr_primary">'.__('Save', 'knr-player').'</button></li>';
 					}
 					?>
 				  </ul>
@@ -495,12 +495,12 @@ function knr_player_settings() {
 				  <div id="knr_player-add-skin">
 					<label>
 					  <input type="radio" name="knr_player_skin" value="1" <?php echo ($knr_player_skin == '1')? 'checked' : '';?> class="knr_checkbox">
-					  <img src="<?php echo plugin_dir_url( __FILE__ ); ?>images/skin-1.jpg">
+					  <img src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/skin-1.jpg'); ?>">
 					</label>
 
 					<label>
 					  <input type="radio" name="knr_player_skin" value="2" <?php echo ($knr_player_skin == '2')? 'checked' : '';?> class="knr_checkbox">
-					  <img src="<?php echo plugin_dir_url( __FILE__ ); ?>images/skin-2.jpg">
+					  <img src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/skin-2.jpg'); ?>">
 					</label>
 
 				  </div>
@@ -525,7 +525,14 @@ function knr_player_settings() {
 								<tr>
 									<td width='25%'><input type='text' value='[KNR_Player id=\"$print->id\"]' disabled></td>
 									<td width='25%'>$print->name</td>
-									<td width='25%'><a href='admin.php?page=knr_player&knr_upt=$print->id'><button type='button' class='knr_button knr_primary'>UPDATE</button></a> <a href='admin.php?page=knr_player&knr_del=$print->id'><button type='button' class='knr_button knr_info'>DELETE</button></a></td>
+									<td width='25%'>
+										<a href='admin.php?page=knr_player&knr_upt=$print->id'>
+											<button type='button' class='knr_button knr_primary'>".__('UPDATE', 'knr-player')."</button>
+										</a>
+										<a href='admin.php?page=knr_player&knr_del=$print->id'>
+											<button type='button' class='knr_button knr_info'>".__('DELETE', 'knr-player')."</button>
+										</a>
+									</td>
 								</tr>
 							";
 						}
