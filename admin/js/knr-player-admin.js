@@ -1,18 +1,18 @@
 (function( $ ) {
-	'use strict';
+    'use strict';
 
-	// All of the code for your admin-facing JavaScript source
-	// should reside in this file.
-	//
-	// Note: It has been assumed you will write jQuery code here, so the
-	// $ function reference has been prepared for usage within the scope
-	// of this function.
-	//
-	// This enables you to define handlers, for when the DOM is ready:
-	//
-	 jQuery(document).ready(function($){
+    // All of the code for your admin-facing JavaScript source
+    // should reside in this file.
+    //
+    // Note: It has been assumed you will write jQuery code here, so the
+    // $ function reference has been prepared for usage within the scope
+    // of this function.
+    //
+    // This enables you to define handlers, for when the DOM is ready:
+    //
+     jQuery(document).ready(function($){
 
-		$( "#knr_player-tabs" ).tabs();
+        $( "#knr_player-tabs" ).tabs();
 
 
 const knr_player_config = {
@@ -43,13 +43,14 @@ const knr_form = $('#knr_audio_form');
 const btn = $(knr_form).find("#knr_open_modal");
 const knr_list_mp3 = $(knr_form).find("#knr_list_mp3");
 
-let audio_data = [];
+let audio_data = {};
 
 // Get the modal
 const modal = $("#knr_player_Modal");
 // Get the <span> element that closes the modal
 const close = $(modal).find(".close");
-const save = $(modal).find(".save");
+const save = $(modal).find("#save");
+const update = $(modal).find("#update");
 
 // When the user clicks on the button, open the modal
 $(btn).click(function() {
@@ -63,55 +64,65 @@ $(btn).click(function() {
         find_audio: info                   //data
     }, function(data) {                   //callback
         $('#knr_modal_table').html(data);
-        console.log(data);
+        $(save).show();
+        $(update).hide();
+
         $(modal).show();
     });
 });
 
 // When the user clicks on (x), close the modal 
 $(close).click(function() {
-	$(modal).hide();
-	console.log('click');
+    $(modal).hide();
+    console.log('click');
 });
 
 
 $(save).click(function() {
     $(knr_form)[0].reset();
     $(modal).hide();
+    const id = $(knr_list_mp3).find('li:last-child').attr('val')||0;
+    const item_id = (id*1)+1;
 
-    console.log();
+    const audio_item = knr_audio_info(modal);
+    audio_data[item_id] = audio_item;
 
-let src = $(modal).find('#knr_player_mp3').val();
-let is_live = $(modal).find('#knr_player_is_live').is(":checked");
-let image = $(modal).find('#knr_player_image').val();
-let title = $(modal).find('#knr_player_title').val();
-let info = $(modal).find('#knr_player_info').val();
 
-let skin = 1;
-	if ( $(modal).find('#knr_player_skin_2').is(":checked"))
-	{
-	  skin = 2;
-	}
-let volume = $(modal).find('#knr_player_default_volume').val();
+console.log(audio_data);
 
-const id = $(knr_list_mp3).find('li:last-child').attr('id')||0;
-const item_id = (id*1)+1;
-
-let audio_item = {
-    src : src,
-    is_live : is_live,
-    image : image,
-    title : title,
-    info : info,
-    skin: skin,
-    volume : volume 
-};
-
-audio_data.push(audio_item);
-
-    const li_cnt = '<li id="'+item_id+'">'+title+'</li>';
+    const li_cnt = '<li val="'+item_id+'">'+audio_item.title+'</li>';
     $('#knr_list_mp3').append(li_cnt);
 });
+
+
+$(update).click(function() {
+    const audio_item = knr_audio_info(modal);
+    $('#knr_list_mp3').find($('li[val='+audio_item.id+']')).find('.knr_open_modal_update').val(audio_item.title);
+    console.log(audio_item);
+    console.log('update');
+});
+
+
+function knr_audio_info(modal) {
+    const src = $(modal).find('#knr_player_mp3').val();
+    const id = $(modal).find('#knr_player_mp3').attr('data');
+    const is_live = $(modal).find('#knr_player_is_live').is(":checked");
+    const image = $(modal).find('#knr_player_image').val();
+    const title = $(modal).find('#knr_player_title').val();
+    const info = $(modal).find('#knr_player_info').val();
+    const volume = $(modal).find('#knr_player_default_volume').val();
+    const audio_item = {
+        id  : id,
+        src : src,
+        is_live : is_live,
+        image : image,
+        title : title,
+        info : info,
+        volume : volume 
+    };
+    return audio_item;
+}
+
 
 
 // When the user clicks anywhere outside of the modal, close it
@@ -125,10 +136,11 @@ audio_data.push(audio_item);
 
     $('.knr_player_save').click(function() {
         const save_data = {
-            name : $(knr_form).find("#knr_player_name").val(),
-            option: $(this).attr('option'),
-            id: $(this).attr('upid'),
-            data : audio_data
+            name    : $(knr_form).find("#knr_player_name").val(),
+            option  : $(this).attr('option'),
+            skin    : $("input[name='knr_player_skin']:checked").val() || 1,
+            id      : $(this).attr('upid'),
+            data    : audio_data
         };
 
         $.post(knr_player.ajax_url, {         //POST request
@@ -137,14 +149,14 @@ audio_data.push(audio_item);
             audio_data: save_data             //data
         }, function(data) {                   //callback
             console.log(data);
-            location.replace('admin.php?page=knr_player');
+            // location.replace('admin.php?page=knr_player');
         });
     });
 
     $('.knr_open_modal_update').click(function() {
         const info = {
             option: 'find',
-            id: $(this).attr('id'),
+            id: $(this).attr('auid'),
             pid: $(this).attr('pid')
         };
 
@@ -154,6 +166,10 @@ audio_data.push(audio_item);
             find_audio: info                   //data
         }, function(data) {                   //callback
             $('#knr_modal_table').html(data);
+
+            $(save).hide();
+            $(update).show();
+
             console.log(data);
             $(modal).show();
         });
@@ -162,7 +178,7 @@ audio_data.push(audio_item);
 
 
 
-	 });
+     });
 
 
 
@@ -327,21 +343,21 @@ function showDuration(audio, duration, progress) {
 
 
 
-	// $(function() {
-		
-	// });
+    // $(function() {
+        
+    // });
 
  
-	 // When the window is loaded:
-	 // $( window ).load(function() {
-	 // });
+     // When the window is loaded:
+     // $( window ).load(function() {
+     // });
 
 
-	 // ...and/or other possibilities.
-	 // Ideally, it is not considered best practise to attach more than a
-	 // single DOM-ready or window-load handler for a particular page.
-	 // Although scripts in the WordPress core, Plugins and Themes may be
-	 // practising this, we should strive to set a better example in our own work.
-	 
+     // ...and/or other possibilities.
+     // Ideally, it is not considered best practise to attach more than a
+     // single DOM-ready or window-load handler for a particular page.
+     // Although scripts in the WordPress core, Plugins and Themes may be
+     // practising this, we should strive to set a better example in our own work.
+     
 
 }( jQuery ));

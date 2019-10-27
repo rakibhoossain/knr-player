@@ -318,15 +318,15 @@ public function knr_player_ajax_form() {
 
 		$audios = $data[data];
 		$name = $data[name];
+		$skin = $data[skin];
 
 		$options = [
 			'playlist' => false,
-			'skin'=> 1,
+			'skin'=> $skin,
 			'audio' => [] 
 		];
 
-		foreach ($audios as $audio) {
-			$options[skin] = $audio[skin];
+		foreach ($audios as $i=>$audio) {
 			$option = [
 				'src' => $audio[src],
 				'is_live' => $audio[is_live],
@@ -335,7 +335,8 @@ public function knr_player_ajax_form() {
 				'info' => $audio[info],
 				'volume' => $audio[volume] 
 			];
-			array_push($options[audio], $option);
+
+			$options[audio][$i] = $option;
 		}
 
 		$audio_data = json_encode($options);
@@ -360,27 +361,28 @@ public function knr_player_ajax_form() {
 	if (isset($_POST["find_audio"])) {
 		$find_item = $_POST["find_audio"];
 
-
-		$src = $is_live = $image = $title = $info = null;
+		$src = $is_live = $image = $title = $info = $audio_id = null;
 
 		if ($find_item["option"] == 'find') {
+
 			$post_id = $find_item["pid"];
 			$audio_id = $find_item["id"];
 
 			$audio_data = [];
 			$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$post_id'");
 
-			foreach($result as $print) {
-				$audio_crnt_data = json_decode($print->data);
-				$audio_data = $audio_crnt_data->audio;
-			}
-			$music_info = $audio_data[$audio_id];
+			foreach ($result as $res) {
+				$audio_crnt_data = json_decode($res->data);
+				$audio_data = (array)$audio_crnt_data->audio;
+				$music_info = $audio_data[$audio_id];
 
-			$src = $music_info->src;
-			$is_live = $music_info->is_live;
-			$image = $music_info->image;
-			$title = $music_info->title;
-			$info = $music_info->info;
+				$src = $music_info->src;
+				$is_live = $music_info->is_live;
+				$image = $music_info->image;
+				$title = $music_info->title;
+				$info = $music_info->info;
+			}
+
 		};
 
 		?>
@@ -389,7 +391,7 @@ public function knr_player_ajax_form() {
 	  			<tr>
 	  				<th><label for="knr_player_mp3"><?php _e('Mp3 URL', 'knr-player');?></label></th>
 	  				<td>
-	  					<input name="knr_player_mp3" type="text" id="knr_player_mp3" value="<?php echo $src;?>" class="regular-text">
+	  					<input name="knr_player_mp3" type="text" id="knr_player_mp3" data="<?php echo $audio_id;?>" value="<?php echo $src;?>" class="regular-text">
 	  					<p>
 	  						<label><input name="knr_player_is_live" type="checkbox" id="knr_player_is_live" <?php echo ($is_live)? 'checked':''; ?>><?php _e('This is a live streaming', 'knr-player');?></label>
 	  					</p>
@@ -423,7 +425,6 @@ public function knr_player_ajax_form() {
 	  	</table>
 		<?php
 	}
-	return;	
 }
 
 
@@ -448,8 +449,8 @@ public function knr_player_ajax_form() {
 
 
 
-		$knr_player_mp3 = $knr_player_is_live = $knr_player_image = $knr_player_title = $knr_player_info = $knr_h_id = $knr_player_skin= null;
-		$knr_player_default_volume = 50;
+		// $knr_player_mp3 = $knr_player_is_live = $knr_player_image = $knr_player_title = $knr_player_info = $knr_h_id = $knr_player_skin= null;
+		// $knr_player_default_volume = 50;
 
 
 		if(isset($_GET["knr_upt"])) {
@@ -551,7 +552,7 @@ public function knr_player_ajax_form() {
 							if ($update) {
 								$audio_crnt = $audio_crnt_data->audio;
 								foreach ($audio_crnt as $i=> $audio) {
-									echo '<li id="'.$i.'"><input type="button" pid="'.$upt_id.'" id="'.$i.'" value="'.$audio->title.'" class="knr_open_modal_update"></li>';
+									echo '<li val="'.$i.'"><input type="button" pid="'.$upt_id.'" auid="'.$i.'" value="'.$audio->title.'" class="knr_open_modal_update"></li>';
 								}
 							}
 						?>
@@ -581,7 +582,8 @@ public function knr_player_ajax_form() {
     <span class="close">&times;</span>
 
 	<div id="knr_modal_table"> </div>
-	<span class="save">Save</span>
+	<span class="save_audio" id="save">Save</span>
+	<span class="save_audio" id="update" style="display: none;">Update</span>
 
   </div>
 
