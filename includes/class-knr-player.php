@@ -212,21 +212,23 @@ class Knr_Player {
 		$table_name = $wpdb->prefix . "knr_player";
 		$id = $atts['id'];
 
-		$results = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$id'");
+		$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$id'");
 
-		if ($results) {
-			foreach($results as $result) { 
-				$data = json_decode($result->data);
+		if ($result) {
+			foreach ($result as $res) {
+				$audio_crnt_data = json_decode($res->data);
+				$audio_data = (array)$audio_crnt_data->audio;
 
-				if($data->skin == '2'){
+				$audio = reset($audio_data);
+				if($audio_crnt_data->skin == '2') {
 				return '
 					<div class="knr_player_2 knr" style="background-color:#e2e3ea;">
 						<div class="knr_player_rect">
 							<img src="http://localhost/wordpress/wp-content/uploads/2019/07/logo-final_23_07_2019.png" class="knr_player_icon">
 							<div class="knr_player_box">
 								<div class="info">
-									<strong>'.$data->title.'</strong>
-									<p>'.$data->info.'</p>
+									<strong>'.$audio->title.'</strong>
+									<p>'.$audio->info.'</p>
 								</div>
 								<div class="knr_control">
 									<div class="knr_play_control">
@@ -239,7 +241,7 @@ class Knr_Player {
 										<img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 									</div>
 									<audio preload="auto" autoplay>
-										<source src="'.esc_url($data->src).'" type="audio/mpeg">
+										<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 									</audio>
 								</div>
 							</div>
@@ -247,6 +249,8 @@ class Knr_Player {
 					</div>
 				';
 				}
+
+				if($audio_crnt_data->skin == '3') return $this->knr_player_pl($audio_data);
 
 				return '
 					<div class="knr_player knr knr_auto knr_box" style="background-color:#e2e3ea;">
@@ -257,7 +261,7 @@ class Knr_Player {
 						    </div>
 						</div>
 						<audio preload="auto">
-							<source src="'.esc_url($data->src).'" type="audio/mpeg">
+							<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 						</audio>
 					    <div class="knr-volume-controls">
 					        <img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
@@ -271,6 +275,49 @@ class Knr_Player {
 		}
 
 	}
+
+	/**
+	 * Playlist player.
+	 *
+	 * @since    1.0.0
+	 */
+	private function knr_player_pl($audio_data){
+		?>
+      <div class="knr_palyer_pl_play">
+         <div class="audio-image"></div>
+         <div class="audio-player">
+            <div class="audio-info text-center">
+            	<span class="title"></span> - 
+               	<span class="artist text-bold"></span>
+            </div>
+            <input class="volume" type="range" min="0" max="10" value="5">
+            <div class="knr_control">
+               <div class="buttons">
+                  <img class="prev" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/prev.png'); ?>">
+                  <img class="play" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/play.png'); ?>">
+                  <img class="pause" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/pause.png'); ?>">
+                  <img class="stop" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/stop.png'); ?>">
+                  <img class="next" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/next.png'); ?>">
+               </div>
+            </div>
+            <div class="tracker">
+               <div class="progress-bar stripes">
+                  <span class="progress-bar-inner progress"></span>
+               </div>
+               <span class="duration">0:00</span>
+            </div>
+            <ul class="playlist">
+			<?php
+				foreach ($audio_data as $audio) {
+					echo'<li song="'.$audio->src.'" cover="'.$audio->image.'" artist="'.$audio->author.'">'.$audio->title.'</li>';
+				}
+			?>
+            </ul>
+         </div>
+      </div>
+	<?php
+	}
+
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

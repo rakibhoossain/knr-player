@@ -344,6 +344,7 @@ public function knr_player_ajax_form() {
 					'is_live' => $audio[is_live],
 					'image' => $audio[image],
 					'title' => $audio[title],
+					'author' => $audio[author],
 					'info' => $audio[info],
 					'volume' => $audio[volume] 
 				];
@@ -380,6 +381,7 @@ public function knr_player_ajax_form() {
 					'is_live' => $audio[is_live],
 					'image' => $audio[image],
 					'title' => $audio[title],
+					'author' => $audio[author],
 					'info' => $audio[info],
 					'volume' => $audio[volume] 
 				];
@@ -408,12 +410,50 @@ public function knr_player_ajax_form() {
 
 	}
 
+// delete audio
+	if(isset($_POST["delete_audio"])) {
+
+		$data = $_POST["delete_audio"];
+		$post_id = $data["pid"];
+		$audio_id = $data["id"];
+
+		$options = [
+			'playlist' => false,
+			'skin'=> $skin,
+			'audio' => [] 
+		];
+
+		$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$post_id'");
+
+		foreach ($result as $res) {
+			$audio_crnt_data = json_decode($res->data);
+			$options[audio] = (array)$audio_crnt_data->audio;
+			$options[skin] = $audio_crnt_data->skin;
+			$options[playlist] = $audio_crnt_data->playlist;
+
+			unset($options[audio][$audio_id]);
+		}
+
+		$audio_data = json_encode($options);
+
+		$ret = $wpdb->update( 
+			$table_name, 
+			array( 
+				'data'		=>	$audio_data
+			), 
+			array( 'id' => $post_id ), 
+			array( 
+				'%s'
+			), 
+			array( '%d' ) 
+		);
+	}
 
 
 	if (isset($_POST["find_audio"])) {
 		$find_item = $_POST["find_audio"];
 
-		$src = $is_live = $image = $title = $info = $audio_id = null;
+		$src = $is_live = $image = $title = $author = $info = $audio_id = null;
 
 		if ($find_item["option"] == 'find') {
 
@@ -432,6 +472,7 @@ public function knr_player_ajax_form() {
 				$is_live = $music_info->is_live;
 				$image = $music_info->image;
 				$title = $music_info->title;
+				$author = $music_info->author;
 				$info = $music_info->info;
 			}
 
@@ -445,7 +486,7 @@ public function knr_player_ajax_form() {
 	  				<td>
 	  					<input name="knr_player_mp3" type="text" id="knr_player_mp3" data="<?php echo $audio_id;?>" value="<?php echo $src;?>" class="regular-text">
 	  					<p>
-	  						<label><input name="knr_player_is_live" type="checkbox" id="knr_player_is_live" <?php echo ($is_live)? 'checked':''; ?>><?php _e('This is a live streaming', 'knr-player');?></label>
+	  						<label><input name="knr_player_is_live" type="checkbox" id="knr_player_is_live" <?php echo ($is_live == 'true')? 'checked':''; ?>><?php _e('This is a live streaming', 'knr-player');?></label>
 	  					</p>
 	  				</td>
 	  			</tr>
@@ -461,6 +502,15 @@ public function knr_player_ajax_form() {
 	  					<input name="knr_player_title" type="text" id="knr_player_title" value="<?php echo $title;?>" class="large-text">
 	  				</td>
 	  			</tr>
+
+	  			<tr>
+	  				<th><label for="knr_player_author"><?php _e('Author', 'knr-player');?></label></th>
+	  				<td>
+	  					<input name="knr_player_author" type="text" id="knr_player_author" value="<?php echo $author;?>" class="large-text">
+	  				</td>
+	  			</tr>
+
+
 	  			<tr>
 	  				<th><label for="knr_player_info"><?php _e('Information', 'knr-player');?></label></th>
 	  				<td>
@@ -477,6 +527,8 @@ public function knr_player_ajax_form() {
 	  	</table>
 		<?php
 	}
+
+	exit();
 }
 
 
@@ -565,6 +617,11 @@ public function knr_player_ajax_form() {
 					  <input type="radio" name="knr_player_skin" id="knr_player_skin_2" value="2" <?php echo ($knr_player_skin == '2')? 'checked' : '';?> class="knr_checkbox">
 					  <img src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/skin-2.jpg'); ?>">
 					</label>
+
+					<label>
+					  <input type="radio" name="knr_player_skin" id="knr_player_skin_3" value="3" <?php echo ($knr_player_skin == '3')? 'checked' : '';?> class="knr_checkbox">
+					  <img src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/skin-3.jpg'); ?>">
+					</label>
 				  </div>
 
 				</div>
@@ -575,8 +632,9 @@ public function knr_player_ajax_form() {
 			  <div class="modal-content">
 			    <span class="close">&times;</span>
 				<div id="knr_modal_table"> </div>
-				<span class="save_audio" id="save">Save</span>
-				<span class="save_audio" id="update" style="display: none;">Update</span>
+				<input type="button" name="save" value="Save" id="save" class="knr_button knr_primary">
+				<input type="button" name="update" value="Update" id="update" class="knr_button knr_primary" style="display: none;">
+				<input type="button" name="delete" value="Delete" id="delete_btn" class="knr_button knr_info" style="display: none;">
 			  </div>
 			</div>
 

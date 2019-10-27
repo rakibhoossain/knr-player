@@ -51,6 +51,7 @@ const modal = $("#knr_player_Modal");
 const close = $(modal).find(".close");
 const save = $(modal).find("#save");
 const update = $(modal).find("#update");
+const delete_btn = $(modal).find("#delete_btn");
 
 // When the user clicks on the button, open the modal
 $(btn).click(function() {
@@ -66,6 +67,7 @@ $(btn).click(function() {
         $('#knr_modal_table').html(data);
         $(save).show();
         $(update).hide();
+        $(delete_btn).hide();
 
         $(modal).show();
     });
@@ -85,10 +87,8 @@ $(save).click(function() {
     const item_id = (id*1)+1;
 
     const audio_item = knr_audio_info(modal);
+    audio_item.id = item_id;
     audio_data[item_id] = audio_item;
-
-
-console.log(audio_data);
 
     const li_cnt = '<li val="'+item_id+'">'+audio_item.title+'</li>';
     $('#knr_list_mp3').append(li_cnt);
@@ -98,8 +98,9 @@ console.log(audio_data);
 $(update).click(function() {
     const audio_item = knr_audio_info(modal);
     $('#knr_list_mp3').find($('li[val='+audio_item.id+']')).find('.knr_open_modal_update').val(audio_item.title);
-    console.log(audio_item);
-    console.log('update');
+    const current_id = audio_item.id;
+    audio_data[current_id] = audio_item;
+    $(modal).hide();
 });
 
 
@@ -109,6 +110,7 @@ function knr_audio_info(modal) {
     const is_live = $(modal).find('#knr_player_is_live').is(":checked");
     const image = $(modal).find('#knr_player_image').val();
     const title = $(modal).find('#knr_player_title').val();
+    const author = $(modal).find('#knr_player_author').val();
     const info = $(modal).find('#knr_player_info').val();
     const volume = $(modal).find('#knr_player_default_volume').val();
     const audio_item = {
@@ -117,21 +119,12 @@ function knr_audio_info(modal) {
         is_live : is_live,
         image : image,
         title : title,
+        author : author,
         info : info,
         volume : volume 
     };
     return audio_item;
 }
-
-
-
-// When the user clicks anywhere outside of the modal, close it
-// window.onclick = function(event) {
-//   if (event.target == modal) {
-//     modal.style.display = "none";
-//   }
-// }
-
 
 
     $('.knr_player_save').click(function() {
@@ -148,8 +141,7 @@ function knr_audio_info(modal) {
             action: "knr_player_ajax_form",   //action
             audio_data: save_data             //data
         }, function(data) {                   //callback
-            console.log(data);
-            // location.replace('admin.php?page=knr_player');
+            location.replace('admin.php?page=knr_player');
         });
     });
 
@@ -166,15 +158,32 @@ function knr_audio_info(modal) {
             find_audio: info                   //data
         }, function(data) {                   //callback
             $('#knr_modal_table').html(data);
-
             $(save).hide();
             $(update).show();
-
-            console.log(data);
+            $(delete_btn).show();
             $(modal).show();
+
+            $(delete_btn).attr('auid', info.id);
+            $(delete_btn).attr('pid', info.pid);
+
         });
     });
 
+
+    $(delete_btn).click(function() {
+        const info = {
+            option: 'delete',
+            id: $(this).attr('auid'),
+            pid: $(this).attr('pid')
+        };
+        $.post(knr_player.ajax_url, {         //POST request
+           _ajax_nonce: knr_player.nonce,     //nonce
+            action: "knr_player_ajax_form",   //action
+            delete_audio: info                   //data
+        }, function(data) {                   //callback
+            location.replace('admin.php?page=knr_player');
+        });
+    });
 
 
 
