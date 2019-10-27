@@ -326,37 +326,89 @@ public function knr_player_ajax_form() {
 			'audio' => [] 
 		];
 
-		foreach ($audios as $i=>$audio) {
-			$option = [
-				'src' => $audio[src],
-				'is_live' => $audio[is_live],
-				'image' => $audio[image],
-				'title' => $audio[title],
-				'info' => $audio[info],
-				'volume' => $audio[volume] 
-			];
+		if ($data[id]) {
 
-			$options[audio][$i] = $option;
+			$audioID = $data[id];
+
+			$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$audioID'");
+
+			foreach ($result as $res) {
+				$audio_crnt_data = json_decode($res->data);
+				$options[audio] = (array)$audio_crnt_data->audio;
+			}
+
+
+			foreach ($audios as $i=>$audio) {
+				$option = [
+					'src' => $audio[src],
+					'is_live' => $audio[is_live],
+					'image' => $audio[image],
+					'title' => $audio[title],
+					'info' => $audio[info],
+					'volume' => $audio[volume] 
+				];
+
+				$options[audio][$i] = $option;
+			}
+
+			$audio_data = json_encode($options);
+
+			$ret = $wpdb->update( 
+				$table_name, 
+				array( 
+					'name'		=>	$name,
+					'data'		=>	$audio_data,
+					'time'		=>	$time,
+					'authorid'	=>	$authorid
+				), 
+				array( 'id' => $audioID ), 
+				array( 
+					'%s',
+					'%s',
+					'%s',
+					'%d'
+				), 
+				array( '%d' ) 
+			);
+
+
+		}else{
+
+			foreach ($audios as $i=>$audio) {
+				$option = [
+					'src' => $audio[src],
+					'is_live' => $audio[is_live],
+					'image' => $audio[image],
+					'title' => $audio[title],
+					'info' => $audio[info],
+					'volume' => $audio[volume] 
+				];
+
+				$options[audio][$i] = $option;
+			}
+
+			$audio_data = json_encode($options);
+
+			$ret = $wpdb->insert( 
+				$table_name,
+				array( 
+					'name'		=>	$name,
+					'data'		=>	$audio_data,
+					'time'		=>	$time,
+					'authorid'	=>	$authorid
+				), 
+				array( 
+					'%s',
+					'%s',
+					'%s',
+					'%d'
+				) 
+			);	
 		}
 
-		$audio_data = json_encode($options);
-
-		$ret = $wpdb->insert( 
-			$table_name,
-			array( 
-				'name'		=>	$name,
-				'data'		=>	$audio_data,
-				'time'		=>	$time,
-				'authorid'	=>	$authorid
-			), 
-			array( 
-				'%s',
-				'%s',
-				'%s',
-				'%d'
-			) 
-		);
 	}
+
+
 
 	if (isset($_POST["find_audio"])) {
 		$find_item = $_POST["find_audio"];
@@ -437,21 +489,10 @@ public function knr_player_ajax_form() {
 	 */
 	function knrAudioAdd() {
 		global $wpdb, $user_ID;
-
 		$table_name = $wpdb->prefix . "knr_player";
 
 		$update = false;
-
 		$knr_player_name = $audio_crnt_data = $upt_id = $knr_player_skin = null;
-
-
-
-
-
-
-		// $knr_player_mp3 = $knr_player_is_live = $knr_player_image = $knr_player_title = $knr_player_info = $knr_h_id = $knr_player_skin= null;
-		// $knr_player_default_volume = 50;
-
 
 		if(isset($_GET["knr_upt"])) {
 			$upt_id = sanitize_text_field($_GET["knr_upt"]);
@@ -465,61 +506,16 @@ public function knr_player_ajax_form() {
 			}
 		}
 
-
-
-		if(isset($_POST["knr_player_update"])) {
-
-			$time = current_time('mysql');
-			$authorid = $user_ID;
-			$name = sanitize_text_field($_POST["knr_player_name"]);
-			$id = sanitize_text_field($_POST["knr_audio_id"]); 
-
-			$url = esc_url($_POST["knr_player_mp3"]);
-			$is_live = ($_POST["knr_player_is_live"])? true : false;
-			$image = esc_url($_POST["knr_player_image"]);
-			$title = sanitize_text_field($_POST["knr_player_title"]);
-			$info = sanitize_textarea_field($_POST["knr_player_info"]);
-			$skin = sanitize_text_field($_POST["knr_player_skin"]);
-			$volume = sanitize_text_field($_POST["knr_player_default_volume"]);
-
-			$option = [
-				'src' => $url,
-				'is_live' => $is_live,
-				'image' => $image,
-				'title' => $title,
-				'info' => $info,
-				'skin'=> $skin,
-				'volume' => $volume 
-			];
-			$data = json_encode($option);
-
-			$ret = $wpdb->update( 
-				$table_name, 
-				array( 
-					'name'		=>	$name,
-					'data'		=>	$data,
-					'time'		=>	$time,
-					'authorid'	=>	$authorid
-				), 
-				array( 'id' => $id ), 
-				array( 
-					'%s',
-					'%s',
-					'%s',
-					'%d'
-				), 
-				array( '%d' ) 
-			);
-			echo "<script>location.replace('admin.php?page=knr_player');</script>";
-		}
 		if(isset($_GET["knr_del"])) {
 			$del_id = sanitize_text_field($_GET["knr_del"]);
 			$wpdb->query("DELETE FROM $table_name WHERE id='$del_id'");
 			echo "<script>location.replace('admin.php?page=knr_player');</script>";
 		}
+
 		if(isset($_POST["knr_player_cancel"])) {
 			echo "<script>location.replace('admin.php?page=knr_player');</script>";
 		}
+
 		?>
 
 		<!-- Frontend -->
@@ -574,26 +570,15 @@ public function knr_player_ajax_form() {
 				</div>
 			</form>
 
-<!-- The Modal -->
-<div id="knr_player_Modal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-
-	<div id="knr_modal_table"> </div>
-	<span class="save_audio" id="save">Save</span>
-	<span class="save_audio" id="update" style="display: none;">Update</span>
-
-  </div>
-
-</div>
-
-
-
-
-
-
+			<!-- The Modal -->
+			<div id="knr_player_Modal" class="modal">
+			  <div class="modal-content">
+			    <span class="close">&times;</span>
+				<div id="knr_modal_table"> </div>
+				<span class="save_audio" id="save">Save</span>
+				<span class="save_audio" id="update" style="display: none;">Update</span>
+			  </div>
+			</div>
 
 			<!-- Show all audio -->
 			<table class="wp-list-table widefat striped">
