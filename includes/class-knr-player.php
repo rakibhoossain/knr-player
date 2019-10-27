@@ -175,7 +175,10 @@ class Knr_Player {
 		$this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links');
 
 
-
+		//AJax handler
+		// Here we register our "send_form" function to handle our AJAX request, do you remember the "superhypermega" hidden field? Yes, this is what it refers, the "send_form" action.
+		$this->loader->add_action( 'wp_ajax_knr_player_ajax_form', $plugin_admin, 'knr_player_ajax_form' );
+		$this->loader->add_action( 'wp_ajax_nopriv_knr_player_ajax_form', $plugin_admin, 'knr_player_ajax_form' );
 	}
 
 	/**

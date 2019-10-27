@@ -22,7 +22,7 @@
  */
 class Knr_Player_Activator {
 
-function crudOperationsTable() {
+function knrPlayerTable() {
 	global $wpdb;
 	$table_name = $wpdb->prefix . "knr_player";
 	
@@ -45,10 +45,6 @@ function crudOperationsTable() {
 		require_once(ABSPATH . "wp-admin/includes/upgrade.php");
 		dbDelta($sql);
 	}
-
-
-
-
 }
 
 	/**
@@ -59,7 +55,7 @@ function crudOperationsTable() {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-		self::crudOperationsTable();
+		self::knrPlayerTable();
 	}
 
 }
