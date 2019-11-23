@@ -123,9 +123,11 @@ class Knr_Player_Admin {
 	 * @since    1.0.0
 	 */
 	function knr_player_options_pages() {
-		add_menu_page(__('KNR Player','knr-player'), __('KNR Player','knr-player'), 'manage_options', 'knr_player', [$this,'knrAudioAdd'],'dashicons-awards' );
-		add_submenu_page('knr_player', __('Playlist','knr-player'), __('Playlist','knr-player'), 'manage_options', 'knr_player_playlists', [$this,'knr_player_playlists']);
-		add_submenu_page('knr_player', __('Settings','knr-player'), __('Settings','knr-player'), 'manage_options', 'knr_player_settings', [$this,'knr_player_settings']);
+		add_menu_page(__('KNR Player','knr-player'), __('KNR Player','knr-player'), 'manage_options', 'knr_player', [$this,'knrAudio'],'dashicons-awards' );
+		add_submenu_page('knr_player', __('Add audio','knr-player'), __('Add audio','knr-player'), 'manage_options', 'knr_audio', [$this,'knrAudioAdd']);
+
+
+		// add_submenu_page('knr_player', __('Settings','knr-player'), __('Settings','knr-player'), 'manage_options', 'knr_player_settings', [$this,'knr_player_settings']);
 	}
 
 
@@ -450,6 +452,47 @@ public function knr_player_ajax_form() {
 		);
 	}
 
+// update audio
+	if(isset($_POST["update_audio"])) {
+
+		$data = $_POST["update_audio"];
+		$post_id = $data["pid"];
+		$audio_id = $data["id"];
+
+		$audio = $data[data];
+
+		$options = [
+			'playlist' => false,
+			'skin'=> $skin,
+			'audio' => [] 
+		];
+
+		$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$post_id'");
+
+		foreach ($result as $res) {
+			$audio_crnt_data = json_decode($res->data);
+			$options[audio] = (array)$audio_crnt_data->audio;
+			$options[skin] = $audio_crnt_data->skin;
+			$options[playlist] = $audio_crnt_data->playlist;
+
+			$options[audio][$audio_id] = $audio;
+		}
+
+		$audio_data = json_encode($options);
+
+		$ret = $wpdb->update( 
+			$table_name, 
+			array( 
+				'data'		=>	$audio_data
+			), 
+			array( 'id' => $post_id ), 
+			array( 
+				'%s'
+			), 
+			array( '%d' ) 
+		);
+	}
+
 
 	if (isset($_POST["find_audio"])) {
 		$find_item = $_POST["find_audio"];
@@ -559,12 +602,6 @@ public function knr_player_ajax_form() {
 			}
 		}
 
-		if(isset($_GET["knr_del"])) {
-			$del_id = sanitize_text_field($_GET["knr_del"]);
-			$wpdb->query("DELETE FROM $table_name WHERE id='$del_id'");
-			echo "<script>location.replace('admin.php?page=knr_player');</script>";
-		}
-
 		if(isset($_POST["knr_player_cancel"])) {
 			echo "<script>location.replace('admin.php?page=knr_player');</script>";
 		}
@@ -638,6 +675,35 @@ public function knr_player_ajax_form() {
 				<input type="button" name="delete" value="Delete" id="delete_btn" class="knr_button knr_info" style="display: none;">
 			  </div>
 			</div>
+			<br><br>
+
+		</div>
+		<?php
+	}
+
+
+
+
+
+	/**
+	 * Audio manage page.
+	 *
+	 * @since    1.0.0
+	 */
+	function knrAudio() {
+		global $wpdb, $user_ID;
+		$table_name = $wpdb->prefix . "knr_player";
+
+		if(isset($_GET["knr_del"])) {
+			$del_id = sanitize_text_field($_GET["knr_del"]);
+			$wpdb->query("DELETE FROM $table_name WHERE id='$del_id'");
+			echo "<script>location.replace('admin.php?page=knr_player');</script>";
+		}
+		?>
+
+		<!-- Frontend -->
+		<div class="wrap">
+			<h2><?php _e('KNR Player', 'knr-player');?></h2>
 
 			<!-- Show all audio -->
 			<table class="wp-list-table widefat striped">
@@ -657,7 +723,7 @@ public function knr_player_ajax_form() {
 									<td width='25%'><input type='text' value='[KNR_Player id=\"$print->id\"]' onclick=\"select();document.execCommand('copy')\"></td>
 									<td width='25%'>$print->name</td>
 									<td width='25%'>
-										<a href='admin.php?page=knr_player&knr_upt=$print->id'>
+										<a href='admin.php?page=knr_audio&knr_upt=$print->id'>
 											<button type='button' class='knr_button knr_warning'>".__('Edit', 'knr-player')."</button>
 										</a>
 										<a href='admin.php?page=knr_player&knr_del=$print->id'>
@@ -674,58 +740,5 @@ public function knr_player_ajax_form() {
 		</div>
 		<?php
 	}
-
-
-	/**
-	 * Audio manage page.
-	 *
-	 * @since    1.0.0
-	 */
-	public function knr_player_playlists(){
-		global $wpdb, $user_ID;
-		$table_name = $wpdb->prefix . "knr_player";
-		$results = $wpdb->get_results("SELECT * FROM $table_name");
-
-		if ($results):
-		?>
-
-      <div class="knr_palyer_pl_play">
-         <div class="audio-image"></div>
-         <div class="audio-player">
-            <div class="audio-info text-center">
-               <span class="artist text-bold"></span> - 
-               <span class="title"></span>
-            </div>
-            <input class="volume" type="range" min="0" max="10" value="5">
-            <div class="knr_control">
-               <div class="buttons">
-                  <img class="prev" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/prev.png'); ?>">
-                  <img class="play" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/play.png'); ?>">
-                  <img class="pause" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/pause.png'); ?>">
-                  <img class="stop" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/stop.png'); ?>">
-                  <img class="next" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/next.png'); ?>">
-               </div>
-            </div>
-            <div class="tracker">
-               <div class="progress-bar stripes">
-                  <span class="progress-bar-inner progress"></span>
-               </div>
-               <span class="duration">0:00</span>
-            </div>
-            <ul class="playlist">
-			<?php
-				foreach ($results as $result) {
-					$data = json_decode($result->data);
-					echo'<li song="'.$data->src.'" cover="'.$data->image.'" artist="">'.$data->title.'</li>';
-				}
-			?>
-            </ul>
-         </div>
-      </div>
-	<?php
-	endif;
-	}
-
-
 
 }

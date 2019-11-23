@@ -47,21 +47,48 @@ table {
     background: #9c3535;
     color: #fff;
 }
-.knr_primary:hover{
-	background: #f7f7f7;
-  color:#000; 
+
+.knr_icon_calcel {
+    color: #fff;
+    background: #E91E63;
+    font-size: 12px;
+    padding: 1px 2px;
+    margin: 1px 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px #0073aa;
 }
+.knr_pointer{
+  cursor:pointer;
+  margin-left: 5px;
+}
+#knr_open_modal {
+    background: #d30c5c;
+    color: #fff;
+    cursor:pointer;
+}
+.knr_open_modal_update {
+    background: #3F51B5;
+    color: #fff;
+    cursor:pointer;
+}
+
+
 .knr_warning{
   background: #fe9900;
   color: #fff;
 }
-.knr_warning:hover{
+.knr_primary:hover{
+	background: #f7f7f7;
+  color:#000; 
+}
+.knr_open_modal_update:hover,
+#knr_open_modal:hover,
+.knr_icon_calcel:hover,
+.knr_warning:hover,
+.knr_info:hover{
   background: #0073aa;
 }
-.knr_info:hover{
-    background: #0073aa;
-}
-
 
 .knr_player-box {
     background: #fff;
@@ -100,233 +127,6 @@ ul#knr_list_mp3 li{
   display: flex;
   align-items: center;
 }
-
-
-/*Playlist player*/
-.knr_palyer_pl_play {
-  width: 330px;
-  min-height: 400px;
-  background: -webkit-linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
-  /* Chrome 10+, Saf5.1+ */
-  background: -moz-linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
-  /* FF3.6+ */
-  background: -ms-linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
-  /* IE10 */
-  background: -o-linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
-  /* Opera 11.10+ */
-  background: linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
-  /* W3C */
-  overflow: auto;
-  margin: 150px auto;
-  border-radius: 13px;
-  box-shadow: 0 10px 8px -8px #333;
-  color: #fff;
-}
-
-.knr_palyer_pl_play .audio-image {
-  position: relative;
-  overflow: hidden;
-  height: 200px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-bold {
-  font-weight: bold;
-}
-
-.knr_palyer_pl_play .audio-player {
-  margin: 5px;
-}
-
-.knr_palyer_pl_play .volume {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -moz-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -webkit-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  outline: none;
-  opacity: 0.7;
-  -webkit-transition: 0.5s;
-  transition: 0.5s;;
-}
-
-.knr_palyer_pl_play .volume::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-  appearance: none;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -moz-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -webkit-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  cursor: pointer;
-  transition: 0.5s;
-  -webkit-transition: 0.5s;
-}
-
-.knr_palyer_pl_play .volume:hover {
-  opacity: 1;
-}
-
-.knr_palyer_pl_play .volume::-moz-range-thumb {
-  width: 15px;
-  height: 15px;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -moz-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -webkit-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  cursor: pointer;
-  transition: 0.5s;
-  -webkit-transition: 0.5s;
-}
-
-
-/*Control*/
-.knr_palyer_pl_play .knr_control {
-  width: 100%;
-  text-align: center;
-  margin-top: 10px;
-}
-.knr_palyer_pl_play .buttons {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.knr_palyer_pl_play .next,
-.knr_palyer_pl_play .prev,
-.knr_palyer_pl_play .stop,
-.knr_palyer_pl_play .pause,
-.knr_palyer_pl_play .play {
-  max-width: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  margin: 0 2px;
-  cursor: pointer;
-  height: auto;
-  width: 20%;
-}
-
-/*Play tracker*/
-.knr_palyer_pl_play .tracker {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-}
-
-.knr_palyer_pl_play .progress-bar {
-    background-color: #1a1a1a;
-    height: 5px;
-    width: 100%;
-    margin-right: 5px;
-    border-radius: 5px;
-    box-shadow: 0 1px 5px #000 inset, 0 1px 0 #444;
-}
-
-.knr_palyer_pl_play .stripes {
-    background-size: 30px 30px;
-    background-image: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, .15) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, .15) 50%,
-        rgba(255, 255, 255, .15) 75%,
-        transparent 75%,
-        transparent
-    );
-}
-
-.knr_palyer_pl_play .progress-bar-inner {
-  display: block;
-  height: 5px;
-  width: 0;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -moz-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -webkit-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset;
-  position: relative;
-  transition: 0.5s;
-  -webkit-transition: 0.5s;
-}
-
-.knr_palyer_pl_play .duration {
-  padding: 4px 8px;
-  background: #000;
-  color: #fff;
-  border-radius: 5px;
-}
-
-.knr_palyer_pl_play .playlist {
-  list-style: none;
-}
-
-.knr_palyer_pl_play .playlist li {
-  cursor: pointer;
-  margin: 5px 0;
-  border-radius: 5px;
-  padding: 3px;
-  transition: 0.5s;
-  -webkit-transition: 0.5s;
-}
-
-.knr_palyer_pl_play .playlist li:hover,
-.knr_palyer_pl_play .playlist li.active {
-  font-weight: bold;
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -moz-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background: -webkit-linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  -webkit-animation: gradientBG 15s ease infinite;
-  -moz-animation: gradientBG 15s ease infinite;
-  animation: gradientBG 15s ease infinite;
-}
-
-
-@-webkit-keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@-moz-keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-
 
 
 /*modal*/

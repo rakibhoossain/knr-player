@@ -35,7 +35,7 @@ class Knr_Player_Deactivator {
 		$wpdb->query("DROP TABLE IF EXISTS $table_name");
 
 		
-		delete_option("knr_player_options");
+		// delete_option("knr_player_options");
 	}
 
 }
