@@ -98,7 +98,8 @@ class Knr_Player_Admin {
 
 		wp_localize_script( $this->plugin_name, 'knr_player', array(
 		    'ajax_url' =>  admin_url( 'admin-ajax.php' ),
-		    'nonce' => wp_create_nonce( "knr_save_data" )
+		    'nonce' => wp_create_nonce( "knr_save_data" ),
+		    'knr_player_url' => plugin_dir_url( __FILE__ )
 		));      
    		wp_enqueue_script( $this->plugin_name );
 	}
@@ -594,8 +595,8 @@ public function knr_player_ajax_form() {
 				  </ul>
 				  <div id="knr_player-add-audio">
 				  	<!-- Trigger/Open The Modal -->
-					<input type="button" id="knr_open_modal" value="<?php _e('Add Mp3', 'knr-player');?>">
 					<ul id="knr_list_mp3">
+						<li><input type="button" id="knr_open_modal" value="<?php _e('Add Mp3', 'knr-player');?>"></li>
 						<?php
 							if ($update) {
 								$audio_crnt = $audio_crnt_data->audio;
@@ -653,11 +654,11 @@ public function knr_player_ajax_form() {
 						foreach ($result as $print) {
 							echo "
 								<tr>
-									<td width='25%'><input type='text' value='[KNR_Player id=\"$print->id\"]' disabled></td>
+									<td width='25%'><input type='text' value='[KNR_Player id=\"$print->id\"]' onclick=\"select();document.execCommand('copy')\"></td>
 									<td width='25%'>$print->name</td>
 									<td width='25%'>
 										<a href='admin.php?page=knr_player&knr_upt=$print->id'>
-											<button type='button' class='knr_button knr_primary'>".__('UPDATE', 'knr-player')."</button>
+											<button type='button' class='knr_button knr_warning'>".__('Edit', 'knr-player')."</button>
 										</a>
 										<a href='admin.php?page=knr_player&knr_del=$print->id'>
 											<button type='button' class='knr_button knr_info'>".__('DELETE', 'knr-player')."</button>

@@ -219,12 +219,12 @@ class Knr_Player {
 				$audio_crnt_data = json_decode($res->data);
 				$audio_data = (array)$audio_crnt_data->audio;
 
-				$audio = reset($audio_data);
+				$audio = reset($audio_data); //getting only first item
 				if($audio_crnt_data->skin == '2') {
 				return '
-					<div class="knr_player_2 knr" style="background-color:#e2e3ea;">
+					<div class="knr_player_2 knr" style="background-color:#fff;">
 						<div class="knr_player_rect">
-							<img src="http://localhost/wordpress/wp-content/uploads/2019/07/logo-final_23_07_2019.png" class="knr_player_icon">
+							<img src="'.$audio->image.'" class="knr_player_icon">
 							<div class="knr_player_box">
 								<div class="info">
 									<strong>'.$audio->title.'</strong>
@@ -253,7 +253,7 @@ class Knr_Player {
 				if($audio_crnt_data->skin == '3') return $this->knr_player_pl($audio_data);
 
 				return '
-					<div class="knr_player knr knr_auto knr_box" style="background-color:#e2e3ea;">
+					<div class="knr_player knr knr_auto knr_box" style="background-color:#fff;">
 						<div class="knr_play_button" style="background-image: url('.plugin_dir_url( __FILE__ ) .'images/player-bg.png);">
 						    <div class="player-bg knr_play">
 						    	<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">

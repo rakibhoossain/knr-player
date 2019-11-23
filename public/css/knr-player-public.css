@@ -87,6 +87,12 @@ img.speaker-icon,img.mute-icon,
     margin-top: 5px;
     margin-bottom: 5px;
 }
+.knr.knr_player_2 .knr_player_rect img {
+    margin-right: 10px;
+    padding: 0;
+    max-width: 120px;
+    max-height: 120px;
+}
 .knr_player_2 .knr_player_icon{
     width: 150px;
     height: 150px;

@@ -49,7 +49,14 @@ table {
 }
 .knr_primary:hover{
 	background: #f7f7f7;
-    color:#000; 
+  color:#000; 
+}
+.knr_warning{
+  background: #fe9900;
+  color: #fff;
+}
+.knr_warning:hover{
+  background: #0073aa;
 }
 .knr_info:hover{
     background: #0073aa;
@@ -88,7 +95,11 @@ table {
 }
 
 
-
+/*Knr player audio list*/
+ul#knr_list_mp3 li{
+  display: flex;
+  align-items: center;
+}
 
 
 /*Playlist player*/
