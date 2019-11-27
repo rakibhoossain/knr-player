@@ -430,11 +430,10 @@ public function knr_player_ajax_form() {
 
 		foreach ($result as $res) {
 			$audio_crnt_data = json_decode($res->data);
-			$options[audio] = (array)$audio_crnt_data->audio;
+			$options[audio] = $audio_crnt_data->audio;
 			$options[skin] = $audio_crnt_data->skin;
 			$options[playlist] = $audio_crnt_data->playlist;
-
-			unset($options[audio][$audio_id]);
+			unset( $options[audio]->$audio_id );
 		}
 
 		$audio_data = json_encode($options);
@@ -509,9 +508,10 @@ public function knr_player_ajax_form() {
 
 			foreach ($result as $res) {
 				$audio_crnt_data = json_decode($res->data);
-				$audio_data = (array)$audio_crnt_data->audio;
-				$music_info = $audio_data[$audio_id];
 
+				$audio_data = $audio_crnt_data->audio;
+				$music_info =  $audio_data->$audio_id;
+				
 				$src = $music_info->src;
 				$is_live = $music_info->is_live;
 				$image = $music_info->image;
