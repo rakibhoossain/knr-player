@@ -40,7 +40,7 @@ jQuery(document).ready(function($){
     song    = $(player).find('audio')[0],
     volume  =  $(player).find('.knr-volume-controls');
     let mute      =   false;
-    song.volume=1.0;
+    song.volume= $(volume).attr('volume')/100;
 
     play.click(function(){
       if (!song.paused) {
@@ -81,8 +81,6 @@ jQuery(document).ready(function($){
     sound  = $(player).find('.knr_volume');
     let mute      =   false;
     song.volume= $(volume_control).attr('volume')/100;
-
-    console.log($(volume_control).attr('volume')/100);
 
     sound.slider({
         min: 0,

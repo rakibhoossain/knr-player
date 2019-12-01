@@ -78,8 +78,10 @@ class Knr_Player {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
+		
+		add_filter( 'widget_text', 'do_shortcode' );
 		add_shortcode( 'KNR_Player', [$this,'KNR_Player_shortcode_handler'] );
+
 
 	}
 
@@ -156,24 +158,22 @@ class Knr_Player {
 
 		$plugin_admin = new Knr_Player_Admin( $this->get_plugin_name(), $this->get_version() );
 
+
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		
 		/**
 		 * register our knr_player_settings_init to the admin_init action hook
 		 */
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'knr_player_settings_init' );
+		// $this->loader->add_action( 'admin_init', $plugin_admin, 'knr_player_settings_init' );
 		/**
 		 * register our knr_player_options_pages to the admin_menu action hook
 		 */
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'knr_player_options_pages' );
 
-
 		// Add Settings link to the plugin
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php');
 		$this->loader->add_filter('plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links');
-
 
 		//AJax handler
 		// Here we register our "send_form" function to handle our AJAX request, do you remember the "superhypermega" hidden field? Yes, this is what it refers, the "send_form" action.
@@ -220,6 +220,7 @@ class Knr_Player {
 				$audio_data = (array)$audio_crnt_data->audio;
 
 				$audio = reset($audio_data); //getting only first item
+				$autoplay = ($audio->autoplay == 'true')? 'autoplay' : '';
 				if($audio_crnt_data->skin == '2') {
 				return '
 					<div class="knr_player_2 knr" style="background-color:#fff;">
@@ -235,12 +236,12 @@ class Knr_Player {
 										<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">
 										<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
 									</div>
-									<div class="knr_volume_control" volume="50">
+									<div class="knr_volume_control" volume="'.$audio->volume.'">
 										<div class="knr_volume animated slideInLeft"></div>
 										<img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
 										<img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 									</div>
-									<audio preload="auto" autoplay>
+									<audio preload="auto" '.$autoplay.'>
 										<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 									</audio>
 								</div>
@@ -260,10 +261,10 @@ class Knr_Player {
 						    	<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
 						    </div>
 						</div>
-						<audio preload="auto">
+						<audio preload="auto" '.$autoplay.'>
 							<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 						</audio>
-					    <div class="knr-volume-controls">
+					    <div class="knr-volume-controls" volume="'.$audio->volume.'">
 					        <img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
 					        <img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 					    </div>
@@ -282,6 +283,8 @@ class Knr_Player {
 	 * @since    1.0.0
 	 */
 	private function knr_player_pl($audio_data){
+			$first = reset($audio_data); //getting only first item
+			$volume = ($first->volume / 10); //playlist volume
 		?>
       <div class="knr_palyer_pl_play">
          <div class="audio-image"></div>
@@ -290,7 +293,7 @@ class Knr_Player {
             	<span class="title"></span> - 
                	<span class="artist text-bold"></span>
             </div>
-            <input class="volume" type="range" min="0" max="10" value="5">
+            <input class="volume" type="range" min="0" max="10" value="<?php echo $volume; ?>">
             <div class="knr_control">
                <div class="buttons">
                   <img class="prev" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/prev.png'); ?>">

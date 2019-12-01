@@ -35,8 +35,8 @@
 .knr_player .knr-volume-controls img.mute-icon {
     display: inline-block;
 }
-.knr_play.player-animate > .play-icon,
-.knr_play:not(.player-animate) > .pause-icon,
+.knr_player .knr_play.player-animate > .play-icon,
+.knr_player .knr_play:not(.player-animate) > .pause-icon,
 .knr_player .knr-volume-controls.mute .speaker-icon,
 .knr_player .knr-volume-controls:not(.mute) .mute-icon {
     display:none;
@@ -139,9 +139,8 @@ img.speaker-icon,img.mute-icon,
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  background: #FFF;
+  background: #e04f5f;
   position: absolute;
-  margin-left: -8px;
   margin-top: -8px;
   cursor: pointer;
   outline: none;

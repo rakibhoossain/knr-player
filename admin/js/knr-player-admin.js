@@ -135,12 +135,12 @@
             const volume = $(modal).find('#knr_player_default_volume').val();
 
             const id = $(modal).find('#knr_player_mp3').attr('data');
-            const is_live = $(modal).find('#knr_player_is_live').is(":checked");
+            const autoplay = $(modal).find('#knr_player_autoplay').is(":checked");
 
             const audio_item = {
                 id: id,
                 src: src_val,
-                is_live: is_live,
+                autoplay: autoplay,
                 image: image_val,
                 title: title_val,
                 author: author_val,
@@ -240,30 +240,6 @@
         });
 
     });
-
-
-
-
-
-
-
-
-
-    // $(function() {
-
-    // });
-
-
-    // When the window is loaded:
-    // $( window ).load(function() {
-    // });
-
-
-    // ...and/or other possibilities.
-    // Ideally, it is not considered best practise to attach more than a
-    // single DOM-ready or window-load handler for a particular page.
-    // Although scripts in the WordPress core, Plugins and Themes may be
-    // practising this, we should strive to set a better example in our own work.
 
 
 }(jQuery));
