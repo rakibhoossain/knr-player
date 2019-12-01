@@ -136,23 +136,20 @@ img.speaker-icon,img.mute-icon,
   outline: none;
 }
 .knr_player_2 .knr_volume_control .knr_volume .ui-slider-handle {
-  width: 20px;
+  width: 15px;
   height: 20px;
   border-radius: 20px;
-  background: #e04f5f;
+  background: #e5aa17;
   position: absolute;
-  margin-top: -8px;
+  margin-top: -5px;
   cursor: pointer;
   outline: none;
 }
 
 img.speaker-icon,
 img.mute-icon {
-    padding: 0!important;
+  padding: 0!important;
 }
-
-
-
 
 /*skin-3*/
 /*Playlist player*/
