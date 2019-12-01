@@ -44,8 +44,8 @@ Example shortcode:
 
 == Screenshots ==
 
-1. Playlist player.
-2. Live player.
+![Playlist](https://raw.githubusercontent.com/rakibhoossain/knr-player/master/assets/screenshot-1.png)
+![live play](https://raw.githubusercontent.com/rakibhoossain/knr-player/master/assets/screenshot-2.png)
 
 == Changelog ==
 
