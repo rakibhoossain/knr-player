@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       KNR Player
  * Plugin URI:        https://github.com/rakibhoossain/knr-player
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Create awesome audio player that is compatible with all major browsers and devices (Android, iPhone, iPad).
  * Version:           1.0.0
  * Author:            Rakib Hossain
  * Author URI:        https://github.com/rakibhoossain/
