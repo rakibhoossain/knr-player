@@ -66,6 +66,12 @@ img.speaker-icon,img.mute-icon,
     margin-top: 10px;
     margin-bottom: 10px;
 }
+.knr_player_2 .knr_player_box p{
+  margin-bottom: 3px;
+}
+.knr_player_2 .knr_player_box p:last-child{
+  margin-bottom: 10px;
+}
 .knr_player_2 .knr_volume_control.mute .speaker-icon,
 .knr_player_2 .knr_play_control.player-animate>.play-icon,
 .knr_player_2 .knr_volume_control:not(.mute) .mute-icon,
@@ -154,7 +160,7 @@ img.mute-icon {
 /*skin-3*/
 /*Playlist player*/
 .knr_palyer_pl_play {
-  width: 330px;
+  /*width: 330px;*/
   min-height: 400px;
   background: -webkit-linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
   /* Chrome 10+, Saf5.1+ */
@@ -167,7 +173,7 @@ img.mute-icon {
   background: linear-gradient(90deg, #1F1C2C 10%, #928DAB 90%);
   /* W3C */
   overflow: auto;
-  margin: 150px auto;
+  margin-bottom: 15px;
   border-radius: 13px;
   box-shadow: 0 10px 8px -8px #333;
   color: #fff;

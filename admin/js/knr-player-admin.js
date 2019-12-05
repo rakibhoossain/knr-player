@@ -124,7 +124,7 @@
 
             const title = $(modal).find('#knr_player_title');
             const title_val = $(title).val().trim();
-
+            
             const image = $(modal).find('#knr_player_image');
             const image_val = $(image).val().trim();
             
@@ -147,13 +147,20 @@
                 info: info,
                 volume: volume
             };
+            
 
-            if(src_val && title_val && image_val && author_val) return audio_item;
+            const src_val_test = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z0-9]{2,6}\b([-a-zA-Z0-9@:;%_\+.~#?&//=]*)/g.test(src_val);
+            const image_val_test = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g.test(image_val);
+            const author_val_test = /\s*(?:[\w\.]\s*){3,30}$/.test(author_val);
+            const title_val_test = /\s*(?:[\w\.]\s*){5,100}$/.test(title_val);
+
+
+            if(src_val_test && title_val_test && image_val_test && author_val_test) return audio_item;
             else{
-                (src_val == '')? $(src).css('border-color','#fd5555') : $(src).css('border-color','#276f48');
-                (title_val == '')? $(title).css('border-color','#fd5555') : $(title).css('border-color','#276f48');
-                (image_val == '')? $(image).css('border-color','#fd5555') : $(image).css('border-color','#276f48');
-                (author_val == '')? $(author).css('border-color','#fd5555') : $(author).css('border-color','#276f48');
+                ( src_val_test )? $(src).css('border-color','#276f48') : $(src).css('border-color','#fd5555');
+                ( title_val_test )? $(title).css('border-color','#276f48') : $(title).css('border-color','#fd5555');
+                ( image_val_test )? $(image).css('border-color','#276f48') : $(image).css('border-color','#fd5555');
+                ( author_val_test )? $(author).css('border-color','#276f48') : $(author).css('border-color','#fd5555');
              return false;   
             } 
             
@@ -161,9 +168,19 @@
 
 
         $('.knr_player_save').click(function ()
-        {
+        {   
+            const name = $(knr_form).find("#knr_player_name").val();
+            const name_el = $(knr_form).find("#knr_player_name");
+
+            if(/\s*(?:[\w\.]\s*){5,100}$/.test(name) ){
+                $(name_el).css('border-color','#276f48');
+            }else{
+                $(name_el).css('border-color','#fd5555');
+                return false;  
+            } 
+            
             const save_data = {
-                name: $(knr_form).find("#knr_player_name").val(),
+                name: name,
                 option: $(this).attr('option'),
                 skin: $("input[name='knr_player_skin']:checked").val() || 1,
                 id: $(this).attr('upid'),
@@ -177,7 +194,10 @@
                 audio_data: save_data //data
             }, function (data)
             { //callback
-                location.replace('admin.php?page=knr_player');
+                if(data == '1'){
+                   location.replace('admin.php?page=knr_player');
+                }
+                
             });
         });
 

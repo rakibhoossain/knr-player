@@ -16,19 +16,18 @@
 	 * });
 	 *
 	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
+	 */
+   //  $( window ).load(function() {
+  	//  var context = new AudioContext();
+  	// });
+	
+	 /* ...and/or other possibilities.
 	 *
 	 * Ideally, it is not considered best practise to attach more than a
 	 * single DOM-ready or window-load handler for a particular page.
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-
 
 jQuery(document).ready(function($){
 // ========================================================
@@ -39,6 +38,7 @@ jQuery(document).ready(function($){
     const play    = $(player).find('.knr_play'),
     song    = $(player).find('audio')[0],
     volume  =  $(player).find('.knr-volume-controls');
+    song.muted = false;
     let mute      =   false;
     song.volume= $(volume).attr('volume')/100;
 
@@ -80,6 +80,7 @@ jQuery(document).ready(function($){
     song    = $(player).find('audio')[0],
     sound  = $(player).find('.knr_volume');
     let mute      =   false;
+    song.muted = false;
     song.volume= $(volume_control).attr('volume')/100;
 
     sound.slider({

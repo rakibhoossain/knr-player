@@ -220,28 +220,30 @@ class Knr_Player {
 				$audio_data = (array)$audio_crnt_data->audio;
 
 				$audio = reset($audio_data); //getting only first item
-				$autoplay = ($audio->autoplay == 'true')? 'autoplay' : '';
+				$autoplay = ($audio->autoplay == 'true')? 'autoplay  muted' : '';
+
 				if($audio_crnt_data->skin == '2') {
 				return '
 					<div class="knr_player_2 knr" style="background-color:#fff;">
 						<div class="knr_player_rect">
-							<img src="'.$audio->image.'" class="knr_player_icon">
+							<img src="'.esc_attr($audio->image).'" class="knr_player_icon">
 							<div class="knr_player_box">
 								<div class="info">
-									<strong>'.$audio->title.'</strong>
-									<p>'.$audio->info.'</p>
+									<strong>'.esc_attr($audio->title).'</strong>
+									<p>'.esc_attr($audio->author).'</p>
+									<p>'.esc_attr($audio->info).'</p>
 								</div>
 								<div class="knr_control">
 									<div class="knr_play_control">
 										<img class="play-icon" src="'.plugin_dir_url( __FILE__ ) .'images/play.svg">
 										<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
 									</div>
-									<div class="knr_volume_control" volume="'.$audio->volume.'">
+									<div class="knr_volume_control" volume="'.esc_attr($audio->volume).'">
 										<div class="knr_volume animated slideInLeft"></div>
 										<img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
 										<img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 									</div>
-									<audio preload="auto" '.$autoplay.'>
+									<audio preload="auto" '.esc_attr($autoplay).'>
 										<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 									</audio>
 								</div>
@@ -249,6 +251,7 @@ class Knr_Player {
 						</div>
 					</div>
 				';
+
 				}
 
 				if($audio_crnt_data->skin == '3') return $this->knr_player_pl($audio_data);
@@ -261,10 +264,10 @@ class Knr_Player {
 						    	<img class="pause-icon" src="'.plugin_dir_url( __FILE__ ).'images/pause.svg">
 						    </div>
 						</div>
-						<audio preload="auto" '.$autoplay.'>
+						<audio preload="auto" '.esc_attr($autoplay).'>
 							<source src="'.esc_url($audio->src).'" type="audio/mpeg">
 						</audio>
-					    <div class="knr-volume-controls" volume="'.$audio->volume.'">
+					    <div class="knr-volume-controls" volume="'.esc_attr($audio->volume).'">
 					        <img class="speaker-icon" src="'.plugin_dir_url( __FILE__ ).'images/speaker.svg">
 					        <img class="mute-icon" src="'.plugin_dir_url( __FILE__ ).'images/mute.svg">
 					    </div>
@@ -293,7 +296,7 @@ class Knr_Player {
             	<span class="title"></span> - 
                	<span class="artist text-bold"></span>
             </div>
-            <input class="volume" type="range" min="0" max="10" value="<?php echo $volume; ?>">
+            <input class="volume" type="range" min="0" max="10" value="<?php echo esc_attr($volume); ?>">
             <div class="knr_control">
                <div class="buttons">
                   <img class="prev" src="<?php  echo esc_url(plugin_dir_url( __FILE__ ).'images/player/prev.png'); ?>">
@@ -312,7 +315,7 @@ class Knr_Player {
             <ul class="playlist">
 			<?php
 				foreach ($audio_data as $audio) {
-					echo'<li song="'.$audio->src.'" cover="'.$audio->image.'" artist="'.$audio->author.'">'.$audio->title.'</li>';
+					echo'<li song="'.esc_attr($audio->src).'" cover="'.esc_url($audio->image).'" artist="'.esc_attr($audio->author).'">'.esc_attr($audio->title).'</li>';
 				}
 			?>
             </ul>

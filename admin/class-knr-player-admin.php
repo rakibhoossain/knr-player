@@ -137,13 +137,19 @@ class Knr_Player_Admin {
 
 
 		if(isset($_POST["audio_data"])) {
-			$data = $_POST["audio_data"];
+
+ 			if ( empty($_POST["audio_data"]) || !is_array($_POST["audio_data"]) ) return;
+			$data = (array)$_POST["audio_data"];
+			if( empty( $data[name] ) || !array_key_exists( 'name', $data ) ) return;
+	
 			$time = current_time('mysql');
 			$authorid = $user_ID;
 
-			$audios = $data[data];
-			$name = $data[name];
-			$skin = $data[skin];
+			$name = sanitize_text_field($data[name]);
+			if(!preg_match('/\s*(?:[\w\.]\s*){5,100}$/', $name)) return;
+
+			$skin = sanitize_text_field($data[skin]);
+			$audios = (array)$data[data];
 
 			$options = [
 				'playlist' => false,
@@ -153,7 +159,7 @@ class Knr_Player_Admin {
 
 			if ($data[id]) {
 
-				$audioID = $data[id];
+				$audioID = sanitize_text_field($data[id]);
 
 				$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$audioID'");
 
@@ -166,12 +172,12 @@ class Knr_Player_Admin {
 				foreach ($audios as $i=>$audio) {
 					$option = [
 						'src' => esc_url($audio[src]),
-						'autoplay' => $audio[autoplay],
+						'autoplay' => sanitize_text_field($audio[autoplay]),
 						'image' => esc_url($audio[image]),
-						'title' => esc_html($audio[title]),
-						'author' => esc_html($audio[author]),
-						'info' => esc_html($audio[info]),
-						'volume' => $audio[volume] 
+						'title' => sanitize_text_field($audio[title]),
+						'author' => sanitize_text_field($audio[author]),
+						'info' => sanitize_text_field($audio[info]),
+						'volume' => sanitize_text_field($audio[volume])
 					];
 
 					$options[audio][$i] = $option;
@@ -197,18 +203,20 @@ class Knr_Player_Admin {
 					array( '%d' ) 
 				);
 
+				echo sanitize_text_field($ret);
+
 
 			}else{
 
 				foreach ($audios as $i=>$audio) {
 					$option = [
 						'src' => esc_url($audio[src]),
-						'autoplay' => $audio[autoplay],
+						'autoplay' => sanitize_text_field($audio[autoplay]),
 						'image' => esc_url($audio[image]),
-						'title' => esc_html($audio[title]),
-						'author' => esc_html($audio[author]),
-						'info' => esc_html($audio[info]),
-						'volume' => $audio[volume] 
+						'title' => sanitize_text_field($audio[title]),
+						'author' => sanitize_text_field($audio[author]),
+						'info' => sanitize_text_field($audio[info]),
+						'volume' => sanitize_text_field($audio[volume])
 					];
 
 					$options[audio][$i] = $option;
@@ -230,17 +238,22 @@ class Knr_Player_Admin {
 						'%s',
 						'%d'
 					) 
-				);	
+				);
+				echo sanitize_text_field($ret);	
 			}
-
+		exit();
 		}
 
 		// delete audio
 		if(isset($_POST["delete_audio"])) {
 
-			$data = $_POST["delete_audio"];
-			$post_id = $data["pid"];
-			$audio_id = $data["id"];
+ 			if ( empty($_POST["delete_audio"]) || !is_array($_POST["delete_audio"]) ) return;
+			$data = (array)$_POST["delete_audio"];
+			if ( ! array_key_exists( 'pid', $data ) )  return;
+			if ( ! array_key_exists( 'id', $data ) ) return;
+
+			$post_id = sanitize_text_field($data["pid"]);
+			$audio_id = sanitize_text_field($data["id"]);
 
 			$options = [
 				'playlist' => false,
@@ -276,9 +289,13 @@ class Knr_Player_Admin {
 		// update audio
 		if(isset($_POST["update_audio"])) {
 
-			$data = $_POST["update_audio"];
-			$post_id = $data["pid"];
-			$audio_id = $data["id"];
+ 			if ( empty($_POST["update_audio"]) || !is_array($_POST["update_audio"]) ) return;
+			$data = (array)$_POST["update_audio"];
+			if ( ! array_key_exists( 'pid', $data ) )  return;
+			if ( ! array_key_exists( 'id', $data ) ) return;
+
+			$post_id = sanitize_text_field($data["pid"]);
+			$audio_id = sanitize_text_field($data["id"]);
 
 			$audio = $data[data];
 
@@ -316,14 +333,14 @@ class Knr_Player_Admin {
 
 
 		if (isset($_POST["find_audio"])) {
-			$find_item = $_POST["find_audio"];
+			$find_item = (array)$_POST["find_audio"];
 
 			$src = $autoplay = $image = $title = $author = $info = $audio_id = $volume = null;
 
 			if ($find_item["option"] == 'find') {
 
-				$post_id = $find_item["pid"];
-				$audio_id = $find_item["id"];
+				$post_id = sanitize_text_field($find_item["pid"]);
+				$audio_id = sanitize_text_field($find_item["id"]);
 
 				$audio_data = [];
 				$result = $wpdb->get_results("SELECT * FROM $table_name WHERE id='$post_id'");
@@ -335,12 +352,12 @@ class Knr_Player_Admin {
 					$music_info =  $audio_data->$audio_id;
 					
 					$src = esc_url($music_info->src);
-					$autoplay = $music_info->autoplay;
+					$autoplay = sanitize_text_field($music_info->autoplay);
 					$image = esc_url($music_info->image);
-					$title = esc_html($music_info->title);
-					$author = esc_html($music_info->author);
-					$info = esc_html($music_info->info);
-					$volume = $music_info->volume;
+					$title = sanitize_text_field($music_info->title);
+					$author = sanitize_text_field($music_info->author);
+					$info = sanitize_text_field($music_info->info);
+					$volume = sanitize_text_field($music_info->volume);
 				}
 
 			};
@@ -447,7 +464,7 @@ class Knr_Player_Admin {
 				<ul class="knr_player-nav pull-right">
 					<?php
 					if ($update) {
-						echo '<li><input name="knr_player_update" type="button" class="knr_button knr_primary knr_player_save" upid="'.$upt_id.'" option="update" value="'.__('Update', 'knr-player').'"></li>';
+						echo '<li><input name="knr_player_update" type="button" class="knr_button knr_primary knr_player_save" upid="'.esc_attr($upt_id).'" option="update" value="'.__('Update', 'knr-player').'"></li>';
 						echo '<li><button name="knr_player_cancel" type="submit" class="knr_button knr_info">'.__('Cancel', 'knr-player').'</button></li>';
 					}else{
 						echo '<li><input name="knr_player_save" type="button" class="knr_button knr_primary knr_player_save" option="save" value="'.__('Save', 'knr-player').'"></li>';
@@ -463,7 +480,7 @@ class Knr_Player_Admin {
 							if ($update) {
 								$audio_crnt = $audio_crnt_data->audio;
 								foreach ($audio_crnt as $i=> $audio) {
-									echo '<li val="'.$i.'"><input type="button" pid="'.$upt_id.'" auid="'.$i.'" value="'.$audio->title.'" class="knr_open_modal_update"></li>';
+									echo '<li val="'.esc_attr($i).'"><input type="button" pid="'.esc_attr($upt_id).'" auid="'.esc_attr($i).'" value="'.esc_attr($audio->title).'" class="knr_open_modal_update"></li>';
 								}
 							}
 						?>
@@ -518,7 +535,9 @@ class Knr_Player_Admin {
 		if(isset($_GET["knr_del"])) {
 			$del_id = sanitize_text_field($_GET["knr_del"]);
 			$wpdb->query("DELETE FROM $table_name WHERE id='$del_id'");
-			echo "<script>location.replace('admin.php?page=knr_player');</script>";
+			?>
+			<script>location.replace('admin.php?page=knr_player');</script>
+			<?php
 		}
 		?>
 
@@ -542,13 +561,13 @@ class Knr_Player_Admin {
 						foreach ($result as $print) {
 							echo "
 								<tr>
-									<td width='25%'><input type='text' value='[KNR_Player id=\"$print->id\"]' onclick=\"select();document.execCommand('copy')\"></td>
-									<td width='25%'>$print->name</td>
+									<td width='25%'><input type='text' value='[KNR_Player id=\"".esc_attr($print->id)."\"]' onclick=\"select();document.execCommand('copy')\"></td>
+									<td width='25%'>".esc_attr($print->name)."</td>
 									<td width='25%'>
-										<a href='admin.php?page=knr_audio&knr_upt=$print->id'>
+										<a href='admin.php?page=knr_audio&knr_upt=".esc_attr($print->id)."'>
 											<button type='button' class='knr_button knr_warning'>".__('Edit', 'knr-player')."</button>
 										</a>
-										<a href='admin.php?page=knr_player&knr_del=$print->id'>
+										<a href='admin.php?page=knr_player&knr_del=".esc_attr($print->id)."'>
 											<button type='button' class='knr_button knr_info'>".__('DELETE', 'knr-player')."</button>
 										</a>
 									</td>

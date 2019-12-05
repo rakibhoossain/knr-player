@@ -16,7 +16,7 @@
  * Plugin Name:       KNR Player
  * Plugin URI:        https://github.com/rakibhoossain/knr-player
  * Description:       Create awesome audio player that is compatible with all major browsers and devices (Android, iPhone, iPad).
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Rakib Hossain
  * Author URI:        https://github.com/rakibhoossain/
  * License:           GPL-2.0+
