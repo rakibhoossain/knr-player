@@ -1,7 +1,7 @@
 # Create awesome audio player that is compatible with all major browsers and devices (Android, iPhone, iPad)
 
 
-[KNR Player](https://github.com/rakibhoossain/knr-player) plugin can be used to embed an mp3 audio file on your WordPress post or page using a shortcode. The audio player is cute and compact and will play on all major browsers.
+[KNR Player](https://wordpress.org/plugins/knr-player/) plugin can be used to embed an mp3 audio file on your WordPress post or page using a shortcode. The audio player is cute and compact and will play on all major browsers.
 
 This audio player plugin Supports .mp3 and .ogg file formats.
 
