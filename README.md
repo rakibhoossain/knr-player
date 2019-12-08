@@ -36,5 +36,5 @@ Example shortcode:
 ![live play](https://raw.githubusercontent.com/rakibhoossain/knr-player/master/assets/screenshot-2.png)
 
 ## Changelog
-
+* 1.0.1 - Fix audio source issue.
 * 1.0.0 - Initial release.
